@@ -41,6 +41,7 @@ public class ArticleListFragment extends BaseFragment implements SearchMVPContra
     private ArticleListAdapter listAdapter;
     private TextView searchResultsTextView;
     private TextView noArticlesErrorTextView;
+    private TextView noNetworkErrorTextView;
     private SearchMVPContract.SearchPresenter searchPresenter;
     private String searchQueryText;
     private boolean isLoading = false;
@@ -62,6 +63,7 @@ public class ArticleListFragment extends BaseFragment implements SearchMVPContra
 
             searchResultsTextView = rootView.findViewById(R.id.text_search_query);
             noArticlesErrorTextView = rootView.findViewById(R.id.textview_no_articles);
+            noNetworkErrorTextView = rootView.findViewById(R.id.no_network_error_view);
 
             articleListView = rootView.findViewById(R.id.article_list_view);
             linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -72,6 +74,7 @@ public class ArticleListFragment extends BaseFragment implements SearchMVPContra
             articleListView.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
                 @Override
                 protected void loadMoreItems() {
+                    noNetworkErrorTextView.setVisibility(View.GONE);
                     isLoading = true;
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -139,6 +142,7 @@ public class ArticleListFragment extends BaseFragment implements SearchMVPContra
     @Override
     public void showArticleList(final ArrayList<Article> newArticleList) {
         noArticlesErrorTextView.setVisibility(View.GONE);
+        noNetworkErrorTextView.setVisibility(View.GONE);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -163,6 +167,7 @@ public class ArticleListFragment extends BaseFragment implements SearchMVPContra
     @Override
     public void showNoArticlesErrorMessage() {
         searchResultsTextView.setVisibility(View.GONE);
+        noNetworkErrorTextView.setVisibility(View.GONE);
         noArticlesErrorTextView.setVisibility(View.VISIBLE);
         articleListView.setVisibility(View.GONE);
         noArticlesErrorTextView.setText(getResources().getString(R.string.no_articles_error_message, searchQueryText));
@@ -170,10 +175,16 @@ public class ArticleListFragment extends BaseFragment implements SearchMVPContra
 
     @Override
     public void showNoNetworkErrorMessage() {
-        searchResultsTextView.setVisibility(View.GONE);
-        noArticlesErrorTextView.setVisibility(View.VISIBLE);
-        articleListView.setVisibility(View.GONE);
-        noArticlesErrorTextView.setText(getStringResource(R.string.no_network_error_message));
+        if(isNewSearch) {
+            searchResultsTextView.setVisibility(View.GONE);
+            noArticlesErrorTextView.setVisibility(View.VISIBLE);
+            articleListView.setVisibility(View.GONE);
+            noArticlesErrorTextView.setText(getStringResource(R.string.no_network_error_message));
+        } else {
+            isLoading = false;
+            listAdapter.removeLoadingFooter();
+            noNetworkErrorTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

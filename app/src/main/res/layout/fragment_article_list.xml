@@ -9,6 +9,25 @@
 
 
     <TextView
+        android:id="@+id/no_network_error_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/color_error_bg"
+        android:fontFamily="@font/roboto_italic"
+        android:gravity="center"
+        android:paddingBottom="8dp"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:paddingTop="8dp"
+        android:text="@string/no_network_error_message"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
+        android:translationZ="2dp"/>
+
+    <TextView
         android:id="@+id/textview_no_articles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

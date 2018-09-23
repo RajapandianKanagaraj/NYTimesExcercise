@@ -57,7 +57,7 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder implements View.O
             if (thumbnailImageUrl != null) {
                 Picasso.get().load(APIConstants.IMAGE_BASE_URL + "/" + thumbnailImageUrl)
                         .placeholder(R.drawable.placeholder)
-                        .error(R.drawable.no_image_found)
+                        .error(R.drawable.no_image_icon)
                         .resize(AppConstants.THUMB_IMAGE_WIDTH, AppConstants.THUMB_IMAGE_HEIGHT)
                         .centerCrop()
                         .into(headlineImage);

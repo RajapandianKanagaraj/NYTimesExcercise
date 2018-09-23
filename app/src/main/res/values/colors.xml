@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="color_light_gray">#FAFAFA</color>
+    <color name="color_error_bg">#f20f0f</color>
 </resources>

@@ -74,7 +74,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public void removeLoadingFooter() {
         isLoadingAdded = false;
-        int position = 0;
+        int position = articleList.size() - 1;
         Article item = getItem(position);
 
         if (item != null) {
