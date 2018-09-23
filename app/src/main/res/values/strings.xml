@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">NYTimes</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="label_search_results">Search results for \'%s\'</string>
+    <string name="label_no_articles_error">No articles found, please search articles.</string>
+    <string name="label_read_full_article">Read Full Article</string>
+    <string name="source_by">Source By: </string>
+    <string name="no_articles_error_message">No articles found for this Search query \'%s\'.</string>
+    <string name="no_network_error_message">Please check your network connection and try again later.</string>
+    <string name="article_image_content_des">Article Image</string>
+    <string name="article_headline_image_content_des">Article Headline Image</string>
+    <string name="title_search">Search</string>
+</resources>
