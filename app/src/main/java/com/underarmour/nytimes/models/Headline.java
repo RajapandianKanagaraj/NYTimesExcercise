@@ -17,6 +17,10 @@ public class Headline implements Parcelable {
     private String kicker;
     private String main;
 
+    public Headline() {
+
+    }
+
     protected Headline(Parcel in) {
         sub = in.readString();
         name = in.readString();

@@ -119,7 +119,7 @@ public class ArticleListFragment extends BaseFragment implements SearchMVPContra
         searchPresenter.startSearch(searchText);
     }
 
-    private void showSearchQuery(String searchText) {
+    public void showSearchQuery(String searchText) {
         String formattedText = getResources().getString(R.string.label_search_results, searchText);
 
         TypefaceSpan robotoRegularSpan = new TypefaceSpan("sans-serif-thin");
@@ -151,7 +151,6 @@ public class ArticleListFragment extends BaseFragment implements SearchMVPContra
                 } else {
                     currentPage += 1;
                     searchPresenter.setCurrentPage(currentPage);
-                    showSearchQuery(searchQueryText);
                     articleList.addAll(newArticleList);
                     listAdapter.notifyDataSetChanged();
                 }
@@ -187,5 +186,10 @@ public class ArticleListFragment extends BaseFragment implements SearchMVPContra
         Intent intent = new Intent(getActivity(), ArticleDetailsActivity.class);
         intent.putExtra(AppConstants.BUNDLE_KEY_ARTICLE, article);
         getActivity().startActivity(intent);
+    }
+
+    @Override
+    public void setRootView(View rootView) {
+
     }
 }

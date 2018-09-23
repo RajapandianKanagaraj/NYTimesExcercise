@@ -10,12 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.underarmour.nytimes.R;
 import com.underarmour.nytimes.models.Article;
 import com.underarmour.nytimes.mvp.ArticleDetailsMVPContract;
+import com.underarmour.nytimes.mvp.base.BasePresenter;
 import com.underarmour.nytimes.presenter.ArticleDetailsPresenterImpl;
 import com.underarmour.nytimes.ui.base.BaseFragment;
 import com.underarmour.nytimes.utils.AppConstants;
@@ -34,6 +36,8 @@ public class ArticleDetailsFragment extends BaseFragment implements ArticleDetai
     private TextView authorTextView;
     private TextView sourceTextView;
     private ImageView articleImage;
+    private TextView noDetailsErrorView;
+    private ScrollView mainView;
     private Button readFullArticle;
     private Article article;
     private ArticleDetailsMVPContract.ArticleDetailsPresenter articleDetailsPresenter;
@@ -42,6 +46,7 @@ public class ArticleDetailsFragment extends BaseFragment implements ArticleDetai
         setRetainInstance(true);
         articleDetailsPresenter = new ArticleDetailsPresenterImpl();
         articleDetailsPresenter.setView(this);
+        setPresenter(articleDetailsPresenter);
     }
 
     @Override
@@ -64,11 +69,21 @@ public class ArticleDetailsFragment extends BaseFragment implements ArticleDetai
             authorTextView = rootView.findViewById(R.id.textview_author);
             sourceTextView = rootView.findViewById(R.id.textview_source);
             articleImage = rootView.findViewById(R.id.imageview_article);
+            noDetailsErrorView = rootView.findViewById(R.id.tview_no_details);
+            mainView = rootView.findViewById(R.id.main_view);
             readFullArticle = rootView.findViewById(R.id.button_read_full_article);
             readFullArticle.setOnClickListener(this);
         }
-        articleDetailsPresenter.showArticleDetails(article);
+        if(article != null) {
+            articleDetailsPresenter.showArticleDetails(article);
+        } else {
+            showErrorMessage();
+        }
         return rootView;
+    }
+
+    public void setRootView(View rootView) {
+        this.rootView = rootView;
     }
 
     @Override
@@ -113,7 +128,13 @@ public class ArticleDetailsFragment extends BaseFragment implements ArticleDetai
     }
 
     @Override
-    public void showErrorMessage(String errorMessage) {
+    public void showErrorMessage() {
+        noDetailsErrorView.setVisibility(View.VISIBLE);
+        mainView.setVisibility(View.GONE);
+    }
 
+    @Override
+    public void setPresenter(BasePresenter presenter) {
+        articleDetailsPresenter = (ArticleDetailsMVPContract.ArticleDetailsPresenter) presenter;
     }
 }

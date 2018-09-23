@@ -44,6 +44,11 @@ dependencies {
     //Mockito
     testImplementation "org.mockito:mockito-core:$MOCKITO_VERSION"
 
+    //Power Mockito
+    testImplementation "org.powermock:powermock-core:$POWER_MOCKITO_VERSION"
+    testImplementation "org.powermock:powermock-module-junit4:$POWER_MOCKITO_VERSION"
+    testImplementation "org.powermock:powermock-api-mockito2:$POWER_MOCKITO_VERSION"
+
     //JUnit
     testImplementation "junit:junit:$JUNIT_VERSION"
 

@@ -33,9 +33,11 @@ public class ArticleDetailsPresenterImpl implements ArticleDetailsMVPContract.Ar
                 articleDetailsView.showSnippet(snippet);
             }
 
-            String publishedDate = DateUtil.formatDate(article.getPubDate());
-            if (publishedDate != null) {
-                articleDetailsView.showPublishedDate(publishedDate);
+            if(article.getPubDate() != null) {
+                String publishedDate = DateUtil.formatDate(article.getPubDate());
+                if (publishedDate != null) {
+                    articleDetailsView.showPublishedDate(publishedDate);
+                }
             }
 
             Byline byline = article.getByline();
@@ -48,7 +50,8 @@ public class ArticleDetailsPresenterImpl implements ArticleDetailsMVPContract.Ar
 
             if (multimediaList != null) {
                 for (Multimedia multimedia : multimediaList) {
-                    if (multimedia.getSubType().equals(AppConstants.IMAGE_SIZE_LARGE)) {
+                    if (multimedia.getSubType() != null &&
+                            multimedia.getSubType().equals(AppConstants.IMAGE_SIZE_LARGE)) {
                         thumbnailImageUrl = multimedia.getUrl();
                         break;
                     }
@@ -58,9 +61,12 @@ public class ArticleDetailsPresenterImpl implements ArticleDetailsMVPContract.Ar
             if (thumbnailImageUrl != null) {
                 articleDetailsView.loadArticleImage(APIConstants.IMAGE_BASE_URL + "/" + thumbnailImageUrl);
             }
-            articleDetailsView.showSource(articleDetailsView.getStringResource(R.string.source_by) + article.getSource());
+
+            if(article.getSource() != null) {
+                articleDetailsView.showSource(articleDetailsView.getStringResource(R.string.source_by) + article.getSource());
+            }
         } else {
-            articleDetailsView.showErrorMessage("");
+            articleDetailsView.showErrorMessage();
         }
     }
 

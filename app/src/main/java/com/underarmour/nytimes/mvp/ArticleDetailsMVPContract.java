@@ -20,7 +20,7 @@ public interface ArticleDetailsMVPContract {
 
         void loadArticleImage(String url);
 
-        void showErrorMessage(String errorMessage);
+        void showErrorMessage();
     }
 
     interface ArticleDetailsPresenter extends BasePresenter {

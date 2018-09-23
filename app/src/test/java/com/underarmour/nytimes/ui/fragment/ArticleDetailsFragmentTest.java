@@ -1,8 +1,11 @@
 package com.underarmour.nytimes.ui.fragment;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.underarmour.nytimes.BuildConfig;
@@ -14,16 +17,20 @@ import com.underarmour.nytimes.models.Multimedia;
 import com.underarmour.nytimes.mvp.ArticleDetailsMVPContract;
 import com.underarmour.nytimes.presenter.ArticleDetailsPresenterImpl;
 import com.underarmour.nytimes.ui.activity.ArticleDetailsActivity;
+import com.underarmour.nytimes.utils.AppConstants;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowActivity;
+import org.robolectric.shadows.ShadowIntent;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
 import java.util.ArrayList;
@@ -37,18 +44,44 @@ public class ArticleDetailsFragmentTest {
     private ArticleDetailsFragment articleDetailsFragment;
     private View rootView;
     private ArticleDetailsMVPContract.ArticleDetailsView articleDetailsView;
+    private ArticleDetailsMVPContract.ArticleDetailsPresenter detailsPresenter;
 
     @Before
     public void setup() {
+
+        Article article = Mockito.mock(Article.class);
+        Headline headline = Mockito.mock(Headline.class);
+        Mockito.when(headline.getMain()).thenReturn("Headline");
+        Mockito.when(article.getHeadline()).thenReturn(headline);
+
+        Mockito.when(article.getSnippet()).thenReturn("Snippet");
+        Mockito.when(article.getSource()).thenReturn("Newyork Times");
+        Mockito.when(article.getPubDate()).thenReturn("2018-07-04T23:00:04+0000");
+
+        Byline byline = Mockito.mock(Byline.class);
+        Mockito.when(byline.getOriginal()).thenReturn("Someone");
+        Mockito.when(article.getByline()).thenReturn(byline);
+
+        Mockito.when(article.getWebUrl()).thenReturn("https://www.nytimes.com/2018/09/05/books/review-fear-trump-in-white-house-bob-woodward.html");
+
+
         articleDetailsActivity = Robolectric.buildActivity(ArticleDetailsActivity.class)
                 .create()
                 .visible()
                 .get();
         articleDetailsFragment = new ArticleDetailsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(AppConstants.BUNDLE_KEY_ARTICLE, article);
+        articleDetailsFragment.setArguments(bundle);
         SupportFragmentTestUtil.startFragment(articleDetailsFragment);
         rootView = articleDetailsFragment.getView();
 
-        articleDetailsView = Mockito.mock(ArticleDetailsMVPContract.ArticleDetailsView.class);
+        articleDetailsView = articleDetailsFragment;
+        articleDetailsView.setRootView(rootView);
+
+        detailsPresenter = Mockito.mock(ArticleDetailsPresenterImpl.class);
+        detailsPresenter.setView(articleDetailsView);
+        articleDetailsView.setPresenter(detailsPresenter);
     }
 
     @Test
@@ -71,90 +104,56 @@ public class ArticleDetailsFragmentTest {
     }
 
     @Test
-    public void testFragmentShouldShowHeadLine() {
-        Article article = Mockito.mock(Article.class);
-        Headline headline = Mockito.mock(Headline.class);
-        Mockito.when(headline.getMain()).thenReturn("Headline");
-        Mockito.when(article.getHeadline()).thenReturn(headline);
-        ArticleDetailsMVPContract.ArticleDetailsPresenter detailsPresenter = new ArticleDetailsPresenterImpl();
-        detailsPresenter.setView(articleDetailsView);
-        detailsPresenter.showArticleDetails(article);
+    public void testViewShouldShowAllArticleDetails() {
+        TextView headLineTextView = rootView.findViewById(R.id.textview_headline);
+        Assert.assertTrue("TextView contains incorrect text",
+                "Headline".equals(headLineTextView.getText().toString()));
 
-        Mockito.verify(articleDetailsView, Mockito.atLeastOnce()).showHeadline("Headline");
+        TextView snippetTextView = rootView.findViewById(R.id.textview_snippet);
+        Assert.assertTrue("TextView contains incorrect text",
+                "Snippet".equals(snippetTextView.getText().toString()));
+
+        TextView sourceTextView = rootView.findViewById(R.id.textview_source);
+        Assert.assertTrue("TextView contains incorrect text",
+                sourceTextView.getText().toString().contains("Newyork Times"));
+
+        TextView dateTextView = rootView.findViewById(R.id.textview_date);
+        Assert.assertTrue("TextView contains incorrect text",
+                dateTextView.getText().toString().contains("Jul, 04 2018"));
+
+        TextView authorTextView = rootView.findViewById(R.id.textview_author);
+        Assert.assertTrue("TextView contains incorrect text",
+                authorTextView.getText().toString().contains("Someone"));
+
+    }
+
+    @Test
+    public void textViewShouldShowErrorMessageWhenArticleIsNull() {
+        articleDetailsActivity = Robolectric.buildActivity(ArticleDetailsActivity.class)
+                .create()
+                .visible()
+                .get();
+        articleDetailsFragment = new ArticleDetailsFragment();
+        SupportFragmentTestUtil.startFragment(articleDetailsFragment);
+        rootView = articleDetailsFragment.getView();
+        articleDetailsView.setRootView(rootView);
+
+        TextView noDetailsErrorView = rootView.findViewById(R.id.tview_no_details);
+        ScrollView mainView = rootView.findViewById(R.id.main_view);
+
+        Assert.assertEquals(mainView.getVisibility(), View.GONE);
+        Assert.assertEquals(noDetailsErrorView.getVisibility(), View.VISIBLE);
+    }
+
+//    @Test
+//    public void testReadFullArticleBtnClick() {
+//        Button readFullArticle = rootView.findViewById(R.id.button_read_full_article);
+//        readFullArticle.performClick();
 //
-//        TextView headLineTextView = rootView.findViewById(R.id.textview_headline);
-//        Assert.assertTrue("TextView contains incorrect text",
-//                "Headline".equals(headLineTextView.getText().toString()));
-    }
-
-    @Test
-    public void testFragmentShouldShowArticleSnippet() {
-        Article article = Mockito.mock(Article.class);
-        Mockito.when(article.getSnippet()).thenReturn("Snippet");
-        ArticleDetailsMVPContract.ArticleDetailsPresenter detailsPresenter = new ArticleDetailsPresenterImpl();
-        detailsPresenter.setView(articleDetailsView);
-        detailsPresenter.showArticleDetails(article);
-
-        Mockito.verify(articleDetailsView, Mockito.atLeastOnce()).showSnippet("Snippet");
-    }
-
-    @Test
-    public void testFragmentShouldShowArticleSource() {
-        Article article = Mockito.mock(Article.class);
-        Mockito.when(article.getSource()).thenReturn("Newyork Times");
-        ArticleDetailsMVPContract.ArticleDetailsPresenter detailsPresenter = new ArticleDetailsPresenterImpl();
-        detailsPresenter.setView(articleDetailsView);
-        detailsPresenter.showArticleDetails(article);
-
-        Mockito.verify(articleDetailsView, Mockito.atLeastOnce()).showSource(Mockito.anyString());
-    }
-
-    @Test
-    public void testFragmentShouldShowArticlePublishedDate() {
-        Article article = Mockito.mock(Article.class);
-        Mockito.when(article.getPubDate()).thenReturn("2018-07-04T23:00:04+0000");
-        ArticleDetailsMVPContract.ArticleDetailsPresenter detailsPresenter = new ArticleDetailsPresenterImpl();
-        detailsPresenter.setView(articleDetailsView);
-        detailsPresenter.showArticleDetails(article);
-
-        Mockito.verify(articleDetailsView, Mockito.atLeastOnce()).showPublishedDate("Jul, 04 2018");
-    }
-
-    @Test
-    public void testFragmentShouldShowArticleAuthor() {
-        Article article = Mockito.mock(Article.class);
-        Byline byline = Mockito.mock(Byline.class);
-        Mockito.when(byline.getOriginal()).thenReturn("Someone");
-        Mockito.when(article.getByline()).thenReturn(byline);
-        ArticleDetailsMVPContract.ArticleDetailsPresenter detailsPresenter = new ArticleDetailsPresenterImpl();
-        detailsPresenter.setView(articleDetailsView);
-        detailsPresenter.showArticleDetails(article);
-
-        Mockito.verify(articleDetailsView, Mockito.atLeastOnce()).showAuthor("Someone");
-    }
-
-    @Test
-    public void testFragmentShouldShowArticleImage() {
-        Article article = Mockito.mock(Article.class);
-        Multimedia multimedia = Mockito.mock(Multimedia.class);
-        Mockito.when(multimedia.getSubType()).thenReturn("jumbo");
-        Mockito.when(multimedia.getUrl()).thenReturn("images/2018/09/06/arts/06BookWoodward-Dress/merlin_142169574_b921ed94-acd2-48eb-8da2-ba810a06f1d3-articleLarge.jpg");
-        ArrayList<Multimedia> multimediaList = new ArrayList<>();
-        multimediaList.add(multimedia);
-        Mockito.when(article.getMultimedia()).thenReturn(multimediaList);
-        ArticleDetailsMVPContract.ArticleDetailsPresenter detailsPresenter = new ArticleDetailsPresenterImpl();
-        detailsPresenter.setView(articleDetailsView);
-        detailsPresenter.showArticleDetails(article);
-
-        Mockito.verify(articleDetailsView, Mockito.atLeastOnce()).loadArticleImage(Mockito.anyString());
-    }
-
-    @Test
-    public void testFragemntShouldShowErrorMessageWhenArticleIsNull() {
-        ArticleDetailsMVPContract.ArticleDetailsPresenter detailsPresenter = new ArticleDetailsPresenterImpl();
-        detailsPresenter.setView(articleDetailsView);
-        detailsPresenter.showArticleDetails(null);
-
-        Mockito.verify(articleDetailsView, Mockito.atLeastOnce()).showErrorMessage(Mockito.anyString());
-    }
+//        ShadowActivity shadowActivity = Shadows.shadowOf(articleDetailsActivity);
+//        Intent startedIntent = shadowActivity.getNextStartedActivity();
+//        ShadowIntent shadowIntent = Shadows.shadowOf(startedIntent);
+//        junit.framework.Assert.assertEquals(shadowIntent.getIntentClass(), Intent.ACTION_VIEW);
+//
+//    }
 }

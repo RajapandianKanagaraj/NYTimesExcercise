@@ -12,4 +12,5 @@
     <string name="article_image_content_des">Article Image</string>
     <string name="article_headline_image_content_des">Article Headline Image</string>
     <string name="title_search">Search</string>
+    <string name="txt_no_details_found">No details to show, select someother article.</string>
 </resources>

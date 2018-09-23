@@ -6,8 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.ArticleDetailsFragment">
 
+    <TextView
+        android:id="@+id/tview_no_details"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/roboto_italic"
+        android:gravity="center"
+        android:text="@string/txt_no_details_found"
+        android:translationZ="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
+
     <ScrollView
-        android:id="@+id/scrollView2"
+        android:id="@+id/main_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"

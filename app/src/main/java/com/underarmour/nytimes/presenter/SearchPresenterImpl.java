@@ -14,11 +14,17 @@ public class SearchPresenterImpl implements SearchMVPContract.SearchPresenter, S
     private int currentPage = 0;
     private SearchMVPContract.SearchArticleView searchArticleView;
     private SearchInteractor searchInteractor;
+    private boolean isNewSearch;
+    private String searchQuery;
 
+    public SearchPresenterImpl() {
+        searchInteractor = new SearchInteractor(this);
+    }
     @Override
     public void startSearch(String searchQuery) {
-        if(NetworkConnectionUtil.isConnected()) {
-            searchInteractor = new SearchInteractor(this);
+        isNewSearch = true;
+        this.searchQuery = searchQuery;
+        if(new NetworkConnectionUtil().isConnected()) {
             searchInteractor.searchArticle(searchQuery, currentPage);
         } else {
             searchArticleView.showNoNetworkErrorMessage();
@@ -27,7 +33,12 @@ public class SearchPresenterImpl implements SearchMVPContract.SearchPresenter, S
 
     @Override
     public void loadMoreArticles(String searchQuery) {
-        searchInteractor.searchArticle(searchQuery, currentPage);
+        isNewSearch = false;
+        if(new NetworkConnectionUtil().isConnected()) {
+            searchInteractor.searchArticle(searchQuery, currentPage);
+        } else {
+            searchArticleView.showNoNetworkErrorMessage();
+        }
     }
 
     @Override
@@ -65,6 +76,11 @@ public class SearchPresenterImpl implements SearchMVPContract.SearchPresenter, S
         if(searchResponse != null) {
             Response response = searchResponse.getResponse();
             if(response != null) {
+                currentPage += 1;
+                setCurrentPage(currentPage);
+                if(isNewSearch) {
+                    searchArticleView.showSearchQuery(searchQuery);
+                }
                 searchArticleView.showArticleList(response.getArticles());
             }
         }
@@ -77,5 +93,9 @@ public class SearchPresenterImpl implements SearchMVPContract.SearchPresenter, S
         } else {
             searchArticleView.showNoArticlesErrorMessage();
         }
+    }
+
+    public void setInteractor(SearchInteractor searchInteractor) {
+        this.searchInteractor = searchInteractor;
     }
 }

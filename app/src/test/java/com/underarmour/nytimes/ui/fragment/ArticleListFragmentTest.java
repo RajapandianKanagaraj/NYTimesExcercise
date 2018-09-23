@@ -6,12 +6,14 @@ import android.widget.TextView;
 
 import com.underarmour.nytimes.BuildConfig;
 import com.underarmour.nytimes.R;
+import com.underarmour.nytimes.mvp.SearchMVPContract;
 
 import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
@@ -22,6 +24,9 @@ import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 public class ArticleListFragmentTest {
 
     private View rootView;
+
+    @Mock
+    private SearchMVPContract.SearchPresenter presenter;
 
     @Before
     public void setup() {
@@ -42,4 +47,6 @@ public class ArticleListFragmentTest {
         Assert.assertNotNull(noNetworkErrorTextView);
         Assert.assertNotNull(articleListView);
     }
+
+
 }
