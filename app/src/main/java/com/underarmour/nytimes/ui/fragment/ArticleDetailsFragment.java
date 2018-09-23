@@ -36,7 +36,7 @@ public class ArticleDetailsFragment extends BaseFragment implements ArticleDetai
     private ImageView articleImage;
     private Button readFullArticle;
     private Article article;
-    private ArticleDetailsPresenterImpl articleDetailsPresenter;
+    private ArticleDetailsMVPContract.ArticleDetailsPresenter articleDetailsPresenter;
 
     public ArticleDetailsFragment() {
         setRetainInstance(true);

@@ -59,6 +59,8 @@ public class ArticleDetailsPresenterImpl implements ArticleDetailsMVPContract.Ar
                 articleDetailsView.loadArticleImage(APIConstants.IMAGE_BASE_URL + "/" + thumbnailImageUrl);
             }
             articleDetailsView.showSource(articleDetailsView.getStringResource(R.string.source_by) + article.getSource());
+        } else {
+            articleDetailsView.showErrorMessage("");
         }
     }
 

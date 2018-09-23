@@ -107,11 +107,6 @@ public class ArticleListFragment extends BaseFragment implements SearchMVPContra
         return rootView;
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-
-    }
-
     public void search(String searchText) {
         isNewSearch = true;
         articleList.clear();
