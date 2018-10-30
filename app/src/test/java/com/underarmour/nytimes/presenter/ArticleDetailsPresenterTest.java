@@ -164,6 +164,6 @@ public class ArticleDetailsPresenterTest {
         detailsPresenter.setView(articleDetailsView);
         detailsPresenter.showArticleDetails(null);
 
-        Mockito.verify(articleDetailsView, Mockito.atLeastOnce()).showErrorMessage(Mockito.anyString());
+        Mockito.verify(articleDetailsView, Mockito.atLeastOnce()).showErrorMessage();
     }
 }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.squareup.picasso.Picasso;
 import com.underarmour.nytimes.R;
 import com.underarmour.nytimes.models.Article;
 
@@ -20,9 +21,11 @@ public class ArticleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private ArrayList<Article> articleList;
     private boolean isLoadingAdded = false;
     private OnArticleSelectListener onArticleSelectListener;
+    private Picasso picasso;
 
-    public ArticleListAdapter(ArrayList<Article> articleList, OnArticleSelectListener onArticleSelectListener) {
+    public ArticleListAdapter(ArrayList<Article> articleList, Picasso picasso, OnArticleSelectListener onArticleSelectListener) {
         this.articleList = articleList;
+        this.picasso = picasso;
         this.onArticleSelectListener = onArticleSelectListener;
     }
 
@@ -32,7 +35,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         if(viewType == ARTICLE_VIEW) {
             CardView articleView = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_article_layout, parent, false);
-            ArticleViewHolder resturantViewHolder = new ArticleViewHolder(articleView, onArticleSelectListener);
+            ArticleViewHolder resturantViewHolder = new ArticleViewHolder(articleView, picasso, onArticleSelectListener);
             return resturantViewHolder;
         } else {
             View loadingView = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_loading, parent, false);

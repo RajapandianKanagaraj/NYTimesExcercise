@@ -26,9 +26,11 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder implements View.O
     private TextView dateTextView;
     private Article article;
     private ArticleListAdapter.OnArticleSelectListener onArticleSelectListener;
+    private Picasso picasso;
 
-    public ArticleViewHolder(CardView itemView, ArticleListAdapter.OnArticleSelectListener onArticleSelectListener) {
+    public ArticleViewHolder(CardView itemView, Picasso picasso, ArticleListAdapter.OnArticleSelectListener onArticleSelectListener) {
         super(itemView);
+        this.picasso = picasso;
         this.onArticleSelectListener = onArticleSelectListener;
 
         headlineTextView = itemView.findViewById(R.id.text_view_headline);
@@ -55,7 +57,7 @@ public class ArticleViewHolder extends RecyclerView.ViewHolder implements View.O
             }
 
             if (thumbnailImageUrl != null) {
-                Picasso.get().load(APIConstants.IMAGE_BASE_URL + "/" + thumbnailImageUrl)
+                picasso.load(APIConstants.IMAGE_BASE_URL + "/" + thumbnailImageUrl)
                         .placeholder(R.drawable.placeholder)
                         .error(R.drawable.no_image_icon)
                         .resize(AppConstants.THUMB_IMAGE_WIDTH, AppConstants.THUMB_IMAGE_HEIGHT)

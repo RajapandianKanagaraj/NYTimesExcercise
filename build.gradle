@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
+        classpath 'com.android.tools.build:gradle:3.2.0'
     }
 }
 
@@ -26,4 +26,5 @@ ext {
     MOCKITO_VERSION = "2.8.47"
     ROBOLECTRIC_VERSION = "3.8"
     POWER_MOCKITO_VERSION = "1.7.0"
+    DAGGER_VERSION = "2.17"
 }

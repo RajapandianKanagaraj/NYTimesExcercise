@@ -16,7 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.underarmour.nytimes.R;
+import com.underarmour.nytimes.network.NYTimesAPIAdapter;
 import com.underarmour.nytimes.presenter.SearchPresenterImpl;
 import com.underarmour.nytimes.ui.activity.ArticleDetailsActivity;
 import com.underarmour.nytimes.utils.AppConstants;
@@ -49,11 +51,13 @@ public class ArticleListFragment extends BaseFragment implements SearchMVPContra
     private int currentPage = 0;
     private View rootView;
     private boolean isNewSearch;
+    private Picasso picasso;
 
     public ArticleListFragment() {
         setRetainInstance(true);
         searchPresenter = new SearchPresenterImpl();
         searchPresenter.setView(this);
+        picasso = Picasso.get();
     }
 
     @Override
@@ -68,7 +72,7 @@ public class ArticleListFragment extends BaseFragment implements SearchMVPContra
             articleListView = rootView.findViewById(R.id.article_list_view);
             linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             articleListView.setLayoutManager(linearLayoutManager);
-            listAdapter = new ArticleListAdapter(articleList, this);
+            listAdapter = new ArticleListAdapter(articleList, picasso,this);
             articleListView.setAdapter(listAdapter);
 
             articleListView.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {

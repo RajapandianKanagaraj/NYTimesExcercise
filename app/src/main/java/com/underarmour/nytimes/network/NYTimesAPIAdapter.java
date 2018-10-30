@@ -81,7 +81,7 @@ public enum NYTimesAPIAdapter {
         return httpClient;
     }
 
-    private Picasso getPicasso() {
+    private void getPicasso() {
         OkHttp3Downloader okHttp3Downloader = new OkHttp3Downloader(getOkHttpClient());
         Picasso.Builder builder = new Picasso.Builder(NYTimesApp.getInstance());
         Picasso picasso = builder
@@ -91,7 +91,6 @@ public enum NYTimesAPIAdapter {
             Picasso.setSingletonInstance(picasso);
         } catch (IllegalStateException ignored) {
         }
-        return picasso;
     }
 
 }

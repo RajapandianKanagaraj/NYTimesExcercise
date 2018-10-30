@@ -1,4 +1,4 @@
-package com.underarmour.nytimes.ui.presenter;
+package com.underarmour.nytimes.presenter;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
